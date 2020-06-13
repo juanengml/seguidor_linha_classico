@@ -1,0 +1,4 @@
+console-logging==0.0.5.0
+numpy==1.18.5
+opencv-python==4.2.0.34
+termcolor==1.1.0
