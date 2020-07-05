@@ -21,7 +21,7 @@ def TrataImagem(img):
     FrameBinarizado = cv2.dilate(FrameBinarizado,None,iterations=2)
     FrameBinarizado = cv2.bitwise_not(FrameBinarizado)
     cnts, _ = cv2.findContours(FrameBinarizado.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-    cv2.drawContours(img,cnts,-1,(255,0,255),3)
+    #cv2.drawContours(img,cnts,-1,(255,0,255),3)
 
     for c in cnts:
         #se a area do contorno capturado for pequena, nada acontece
@@ -31,7 +31,7 @@ def TrataImagem(img):
 
         (x, y, w, h) = cv2.boundingRect(c)
 
-        cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
+        #cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
         CoordenadaXCentroContorno = (x+x+w)/2
 
@@ -39,11 +39,11 @@ def TrataImagem(img):
 
         PontoCentralContorno = (int(CoordenadaXCentroContorno),int(CoordenadaYCentroContorno))
 
-        cv2.circle(img, PontoCentralContorno, 1, (0, 0, 0), 5)
+        #cv2.circle(img, PontoCentralContorno, 1, (0, 0, 0), 5)
 
         DirecaoASerTomada = CoordenadaXCentroContorno - (width/2)
 
-    cv2.line(img,(int(width/2),0),(int(width/2),height),(255,0,0),2)
+    #cv2.line(img,(int(width/2),0),(int(width/2),height),(255,0,0),2)
 
     if (QtdeContornos > 0):
         cv2.line(img,PontoCentralContorno,(width/2,CoordenadaYCentroContorno),(0,255,0),1)
@@ -59,18 +59,22 @@ camera.set(4,240)
 for i in range(0,20):
     (grabbed, Frame) = camera.read()
 
+
 while True:
     try:
       (grabbed, Frame) = camera.read()
+      img = Frame
       if (grabbed) == True:
           Direcao,QtdeLinhas = TrataImagem(Frame)
           print(Direcao,QtdeLinhas)
           if (Direcao > 0):
               console.info("Distancia da linha de referencia: "+str(abs(Direcao))+" pixels a direita")
+              cv2.imwrite('direcao/direita/_%s.jpg' % (str(abs(Direcao))), img)
               continue
 
           if (Direcao < 0):
               console.log("Distancia da linha de referencia: "+str(abs(Direcao))+" pixels a esquerda")
+              cv2.imwrite('direcao/esquerda/_%s.jpg' % (str(abs(Direcao))), img)
               continue
 
           if (Direcao == 0):
